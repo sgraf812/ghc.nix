@@ -13,10 +13,10 @@ in
 , hadrianCabal ? (builtins.getEnv "PWD") + "/hadrian/hadrian.cabal"
 , nixpkgs-unstable ? import (sources.nixpkgs-unstable) {}
 , useClang  ? false  # use Clang for C compilation
-, withLlvm  ? false
+, withLlvm  ? true
 , withDocs  ? true
-, withGhcid ? false
-, withIde   ? false
+, withGhcid ? true
+, withIde   ? true
 , withHadrianDeps ? false
 , withDwarf  ? nixpkgs.stdenv.isLinux  # enable libdw unwinding support
 , withNuma   ? nixpkgs.stdenv.isLinux
@@ -147,7 +147,8 @@ in
     export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${lib.makeLibraryPath depsSystem}"
     unset LD
 
-    ${lib.optionalString withDocs "export FONTCONFIG_FILE=${fonts}"}
+    # Breaks VS Code fonts
+    # ${lib.optionalString withDocs "export FONTCONFIG_FILE=${fonts}"}
 
     # A convenient shortcut
     configure_ghc() { ./configure $CONFIGURE_ARGS $@; }

@@ -18,10 +18,10 @@ args@{ system ? builtins.currentSystem
 , version ? "9.9"
 , hadrianCabal ? hadrianPath
 , useClang ? false  # use Clang for C compilation
-, withLlvm ? false
+, withLlvm ? true
 , withDocs ? true
 , withGhcid ? false
-, withIde ? false
+, withIde ? true
 , withHadrianDeps ? false
 , withDwarf ? (pkgsFor nixpkgs system).stdenv.isLinux  # enable libdw unwinding support
 , withGdb ? !((pkgsFor nixpkgs system).gdb.meta.broken or false)
@@ -281,7 +281,8 @@ hspkgs.shellFor rec {
     export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${lib.makeLibraryPath depsSystem}"
     unset LD
 
-    ${lib.optionalString withDocs "export FONTCONFIG_FILE=${fonts}"}
+    # Breaks VS Code fonts
+    # ${lib.optionalString withDocs "export FONTCONFIG_FILE=${fonts}"}
 
     # N.B. This overrides CC, CONFIGURE_ARGS, etc. to configure the cross-compiler.
     # See https://gitlab.haskell.org/ghc/ghc-wasm-meta/-/blob/master/pkgs/wasi-sdk-setup-hook.sh
